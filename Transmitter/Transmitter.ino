@@ -1,7 +1,4 @@
-/* This example shows how to use continuous mode to take
-range measurements with the VL53L0X. It is based on
-vl53l0x_ContinuousRanging_Example.c from the VL53L0X API.
-
+/*
 The range readings are in units of mm. */
 
 #include <Wire.h>
@@ -21,14 +18,18 @@ void setup()
   if (!sensor.init())
   {
     Serial.println("Failed to detect and initialize sensor!");
-    while (1) {}
+    while (1)
+    {
+    }
   }
   // while (!Serial);
   Serial.println("LoRa Sender");
- 
-  if (!LoRa.begin(433E6)) {
+
+  if (!LoRa.begin(433E6))
+  {
     Serial.println("Starting LoRa failed!");
-    while (1);
+    while (1)
+      ;
   }
 
   // Start continuous back-to-back mode (take readings as
@@ -42,17 +43,19 @@ void loop()
 {
   distance = sensor.readRangeContinuousMillimeters();
   Serial.print(distance);
-  if (sensor.timeoutOccurred()) { Serial.print(" TIMEOUT"); }
+  if (sensor.timeoutOccurred())
+  {
+    Serial.print(" TIMEOUT");
+  }
 
   Serial.println();
-  
+
   Serial.println("Sending packet: ");
   LoRa.beginPacket();
   LoRa.print("Distance:");
   LoRa.print(distance);
-  
+
   LoRa.endPacket();
   Serial.println("Sent!");
   delay(1000);
-
 }
