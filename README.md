@@ -1,4 +1,4 @@
-LiDAR Code:
+LiDAR Prototype Code:
 -
 
 - LoRaWAN_Transmitter: implemented code for the transmission prototype for sending packets over LoRaWAN network protocol to our The Things Network server.
