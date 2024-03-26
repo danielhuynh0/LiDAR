@@ -15,14 +15,15 @@ static const u1_t PROGMEM APPEUI[8]={ 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 
 void os_getArtEui (u1_t* buf) { memcpy_P(buf, APPEUI, 8);}
  
 // This should also be in little endian format, see above.
-static const u1_t PROGMEM DEVEUI[8]={ 0x01, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00 };
+static const u1_t PROGMEM DEVEUI[8]={ 0x38, 0x63, 0x06, 0xD0, 0x7E, 0xD5, 0xB3, 0x70 };
 void os_getDevEui (u1_t* buf) { memcpy_P(buf, DEVEUI, 8);}
  
 // This key should be in big endian format (or, since it is not really a
 // number but a block of memory, endianness does not really apply). In
 // practice, a key taken from ttnctl can be copied as-is.
 // The key shown here is the semtech default key.
-static const u1_t PROGMEM APPKEY[16] = { 0x2B, 0x7E, 0x15, 0x16, 0x28, 0xAE, 0xD2, 0xA6, 0xAB, 0xF7, 0x15, 0x88, 0x09, 0xCF, 0x4F, 0x3C };
+// A0 E9 AF 88 0F 67 51 28 5D BB 7B 3E 47 1A AD C4
+static const u1_t PROGMEM APPKEY[16] = { 0xA0, 0xE9, 0xAF, 0x88, 0x0F, 0x67, 0x51, 0x28, 0x5D, 0xBB, 0x7B, 0x3E, 0x47, 0x1A, 0xAD, 0xC4 };
 void os_getDevKey (u1_t* buf) {  memcpy_P(buf, APPKEY, 16);}
  
 static osjob_t sendjob;
@@ -124,7 +125,7 @@ void setup() {
     delay(5000);
     Serial.begin(115200);
     Wire.begin();
-    Serial.println(F("Starting"));
+    Serial.println(F("Starting now!"));
 
     sensor.setTimeout(500);
     if (!sensor.init())
