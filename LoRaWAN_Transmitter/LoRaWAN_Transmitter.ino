@@ -30,15 +30,16 @@ static osjob_t sendjob;
  
 // Schedule TX every this many seconds (might become longer due to duty
 // cycle limitations).
-const unsigned TX_INTERVAL = 3;
+const unsigned TX_INTERVAL = 60;
  
 // Pin mapping
 const lmic_pinmap lmic_pins = {
     .nss = 10,
     .rxtx = LMIC_UNUSED_PIN,
-    .rst = 5,
-    .dio = {2, 3, LMIC_UNUSED_PIN},
+    .rst = 9,
+    .dio = {3, 4, 5},
 };
+
  
 void onEvent (ev_t ev) {
     Serial.print(os_getTime());
@@ -62,6 +63,7 @@ void onEvent (ev_t ev) {
         case EV_JOINED:
             Serial.println(F("EV_JOINED"));
             LMIC_setLinkCheckMode(0);
+            LMIC.dn2Dr = DR_SF9;
             break;
         case EV_RFU1:
             Serial.println(F("EV_RFU1"));
@@ -113,7 +115,7 @@ void do_send(osjob_t* j){
     } else {
         // Prepare upstream data transmission at the next possible time.
         distance = sensor.readRangeContinuousMillimeters(); // This collects the LiDAR sensor reading
-        Serial.print(distance);
+        Serial.println(distance);
         if (sensor.timeoutOccurred()) { Serial.print(" TIMEOUT"); }
         LMIC_setTxData2(1, distance, sizeof(distance)-1, 0);
         Serial.println(F("Packet queued"));
@@ -134,16 +136,23 @@ void setup() {
       while (1) {}
     }
     // while (!Serial);
-    Serial.println("LoRa Sender");
+    delay(5000);
+    Serial.println("Sensor set up completed.");
  
     // LMIC init
     os_init();
+    Serial.println("Initialized LMIC.");
 
     LMIC_reset();
+    LMIC_setClockError(MAX_CLOCK_ERROR);
+    // LMIC_enableSubBand(1);
+    LMIC_selectSubBand(1);
+    Serial.println("Reset LMIC.");
 
     sensor.startContinuous();
  
     // Start job (sending automatically starts OTAA too)
+    Serial.println("Starting job now.");
     do_send(&sendjob);
 }
  
